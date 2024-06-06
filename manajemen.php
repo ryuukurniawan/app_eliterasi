@@ -5,9 +5,11 @@ include 'koneksi.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $judul = $_POST['judul'];
     $cover = $_FILES['cover']['name'];
+    $display = $_FILES['display']['name'];
     $user_id = $_POST['user_id'];
     $genre = $_POST['genre'];
     $kategori = $_POST['kategori'];
+    $keterangan = $_POST['keterangan'];
     $sinopsis = $_POST['sinopsis'];
 
     if ($cover) {
@@ -17,8 +19,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $cover = null; // Set default cover if not uploaded
     }
+    if ($display) {
+        $target_dir = "uploads/";
+        $target_file = $target_dir . basename($display);
+        move_uploaded_file($_FILES["display"]["tmp_name"], $target_file);
+    } else {
+        $display = null; // Set default cover if not uploaded
+    }
 
-    $sql = "INSERT INTO buku (Judul, Cover, User_ID, Genre, Kategori, Sinopsis) VALUES ('$judul', '$cover', '$user_id', '$genre', '$kategori', '$sinopsis')";
+    $sql = "INSERT INTO buku (Judul, Cover, Display, User_ID, Genre, Kategori, Keterangan, Sinopsis) VALUES ('$judul', '$cover', '$display', '$user_id', '$genre', '$kategori', '$keterangan', '$sinopsis')";
 
     if ($conn->query($sql) === TRUE) {
         header('Location: manajemen.php');
@@ -97,7 +106,11 @@ $json_books = json_encode($books);
                         <input class="form-control" type="file" id="cover" name="cover">
                     </div>
                     <div class="mb-3">
-                        <label for="user_id">User ID:</label><br>
+                        <label for="display" class="form-label">Display :</label>
+                        <input class="form-control" type="file" id="display" name="display">
+                    </div>
+                    <div class="mb-3">
+                        <label for="user_id" class="form-label">User ID:</label><br>
                         <select name="user_id" id="user_id" class="form-select" required>
                             <?php foreach ($users as $user): ?>
                                 <option value="<?php echo $user['User_ID']; ?>"><?php echo $user['Username']; ?></option>
@@ -105,12 +118,30 @@ $json_books = json_encode($books);
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="genre" class="form-label">Genre:</label>
-                        <input type="text" class="form-control" name="genre" id="genre" required>
+                        <label for="genre" class="form-label">Genre:</label><br>
+                        <select name="genre" id="genre" class="form-select" required>
+                                <option value="horror">horror</option>
+                                <option value="aksi">aksi</option>
+                                <option value="komedi">komedi</option>
+                                <option value="romantis">romantis</option>
+                                <option value="drama">drama</option>
+                                <option value="fantasi">fantasi</option>
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label for="kategori" class="form-label">Kategori:</label>
-                        <input type="text" class="form-control" name="kategori" id="kategori" required>
+                        <select name="kategori" id="kategori" class="form-select" required>
+                                <option value="komik">komik</option>
+                                <option value="novel">novel</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="keterangan" class="form-label">Keterangan:</label><br>
+                        <select name="keterangan" id="keterangan" class="form-select" required>
+                                <option value="normal">normal</option>
+                                <option value="hits">hits</option>
+                                <option value="populer">populer</option>
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label for="sinopsis" class="form-label">Sinopsis</label>
@@ -122,14 +153,16 @@ $json_books = json_encode($books);
         </div><br>
 
         <h3>Daftar Karya</h3>
-        <table class="table table-striped" style="max-width: 50rem;table-layout: fixed;word-wrap: break-word;">
+        <table class="table table-striped" style="max-width: 70rem;table-layout: fixed;word-wrap: break-word;">
             <tr>
                 <th>Book ID</th>
                 <th>Judul</th>
                 <th>Cover</th>
+                <th>Display</th>
                 <th>User</th>
                 <th>Genre</th>
                 <th>Kategori</th>
+                <th>Keterangan</th>
                 <th>Sinopsis</th>
                 <th>Aksi</th>
             </tr>
@@ -138,9 +171,11 @@ $json_books = json_encode($books);
                 <td><?php echo $book['Book_ID']; ?></td>
                 <td><?php echo $book['Judul']; ?></td>
                 <td><img src="uploads/<?php echo $book['Cover']; ?>" width="70"></td>
+                <td><img src="uploads/<?php echo $book['Display']; ?>" width="70"></td>
                 <td><?php echo $book['Username']; ?></td>
                 <td><?php echo $book['Genre']; ?></td>
                 <td><?php echo $book['Kategori']; ?></td>
+                <td><?php echo $book['Keterangan']; ?></td>
                 <td><?php echo $book['Sinopsis']; ?></td>
                 <td>
                     <a class="btn btn-outline-success" href="update.php?edit=<?php echo $book['Book_ID']; ?>">Edit</a><br><br>
