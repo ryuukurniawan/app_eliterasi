@@ -10,6 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $genre = $_POST['genre'];
     $kategori = $_POST['kategori'];
     $keterangan = $_POST['keterangan'];
+    $ringkasan = $_POST['ringkasan'];
     $sinopsis = $_POST['sinopsis'];
 
     if ($cover) {
@@ -27,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $display = null; // Set default cover if not uploaded
     }
 
-    $sql = "INSERT INTO buku (Judul, Cover, Display, User_ID, Genre, Kategori, Keterangan, Sinopsis) VALUES ('$judul', '$cover', '$display', '$user_id', '$genre', '$kategori', '$keterangan', '$sinopsis')";
+    $sql = "INSERT INTO buku (Judul, Cover, Display, User_ID, Genre, Kategori, Keterangan, Ringkasan, Sinopsis) VALUES ('$judul', '$cover', '$display', '$user_id', '$genre', '$kategori', '$keterangan', '$ringkasan', '$sinopsis')";
 
     if ($conn->query($sql) === TRUE) {
         header('Location: manajemen.php');
@@ -144,6 +145,10 @@ $json_books = json_encode($books);
                         </select>
                     </div>
                     <div class="mb-3">
+                        <label for="ringkasan" class="form-label">Ringkasan</label>
+                        <textarea class="form-control" id="ringkasan" name="ringkasan" required rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
                         <label for="sinopsis" class="form-label">Sinopsis</label>
                         <textarea class="form-control" id="sinopsis" name="sinopsis" required rows="3"></textarea>
                     </div>
@@ -163,6 +168,7 @@ $json_books = json_encode($books);
                 <th>Genre</th>
                 <th>Kategori</th>
                 <th>Keterangan</th>
+                <th>Ringkasan</th>
                 <th>Sinopsis</th>
                 <th>Aksi</th>
             </tr>
@@ -176,6 +182,7 @@ $json_books = json_encode($books);
                 <td><?php echo $book['Genre']; ?></td>
                 <td><?php echo $book['Kategori']; ?></td>
                 <td><?php echo $book['Keterangan']; ?></td>
+                <td><?php echo $book['Ringkasan']; ?></td>
                 <td><?php echo $book['Sinopsis']; ?></td>
                 <td>
                     <a class="btn btn-outline-success" href="update.php?edit=<?php echo $book['Book_ID']; ?>">Edit</a><br><br>

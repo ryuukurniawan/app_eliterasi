@@ -27,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $genre = $_POST['genre'];
     $kategori = $_POST['kategori'];
     $keterangan = $_POST['keterangan'];
+    $ringkasan = $_POST['ringkasan'];
     $sinopsis = $_POST['sinopsis'];
 
     if ($cover) {
@@ -46,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $display = $book['Display'];
     }
 
-    $sql = "UPDATE buku SET Judul='$judul', Cover='$cover', Display='$display', User_ID='$user_id', Genre='$genre', Kategori='$kategori', Keterangan ='$keterangan', Sinopsis='$sinopsis' WHERE Book_ID='$book_id'";
+    $sql = "UPDATE buku SET Judul='$judul', Cover='$cover', Display='$display', User_ID='$user_id', Genre='$genre', Kategori='$kategori', Keterangan ='$keterangan', Ringkasan='$ringkasan', Sinopsis='$sinopsis' WHERE Book_ID='$book_id'";
 
     if ($conn->query($sql) === TRUE) {
         header('Location: manajemen.php');
@@ -142,6 +143,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <option value="hits"<?php if ('hits' == $book['Keterangan']) echo 'selected'; ?>>hits</option>
                                 <option value="populer"<?php if ('populer' == $book['Keterangan']) echo 'selected'; ?>>populer</option>
                         </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ringkasan" class="form-label">Ringkasan:</label>
+                        <textarea class="form-control" id="ringkasan" name="ringkasan" required rows="3"><?php echo $book['Ringkasan']; ?></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="sinopsis" class="form-label">Sinopsis:</label>
